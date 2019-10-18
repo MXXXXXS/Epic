@@ -7,6 +7,7 @@ import {
   ExpansionPanelDetails,
   Button,
   Container,
+  Box,
   ListItem
 } from '@material-ui/core'
 import {
@@ -47,42 +48,64 @@ function App() {
     title: '',
     detail: ''
   })
-  function addOne(e: React.MouseEvent<HTMLButtonElement>) {
-    console.log(itemBuf)
+  function addOne() {
     let i: number
     if ((i = list.map(item => item.title).indexOf(itemBuf.title), i >= 0)) {
       const buf = Array.from(list)
       buf.splice(i, 1, itemBuf)
       setList(buf)
     } else {
-      setList([...list, itemBuf])
+      setList(Array.from([...list, itemBuf]))
+    }
+    setItemBuf({
+      title: '',
+      detail: ''
+    })
+  }
+  function rmOne(title: string) {
+    let i: number
+    if ((i = list.map(item => item.title).indexOf(title), i >= 0)) {
+      const buf = Array.from(list)
+      buf.splice(i, 1)
+      setList(buf)
     }
   }
   function setTitle(e: React.FocusEvent<HTMLInputElement>) {
-    setItemBuf(Object.assign(itemBuf, {title: e.target.value}))
+    setItemBuf(Object.assign({}, itemBuf, { title: e.target.value }))
   }
   function setDetail(e: React.FocusEvent<HTMLInputElement>) {
-    setItemBuf(Object.assign(itemBuf, {detail: e.target.value}))
+    setItemBuf(Object.assign({}, itemBuf, { detail: e.target.value }))
   }
   return (
     <Container maxWidth='sm'>
       <TextField
-        onBlur={setTitle}
+        onChange={setTitle}
         label='主题'
+        value={itemBuf.title}
         placeholder='事项的主题' />
       <TextField
-        onBlur={setDetail}
-        label='内容'
-        placeholder='事项的细节' />
+        id="outlined-multiline-flexible"
+        value={itemBuf.detail}
+        label="事项的细节"
+        multiline
+        rowsMax="4"
+        onChange={setDetail}
+        margin="normal"
+        variant="outlined"
+      />
       <Button onClick={addOne} variant="outlined" color="primary" className={classes.button}>
         添加一条
       </Button>
-      <Panels list={list}></Panels>
+      <Panels list={list} rmOne={rmOne}/>
     </Container>
   );
 }
 
-interface Props {
+interface listHandler {
+  rmOne: Function
+}
+
+interface Props extends listHandler {
   list: Array<ListItem>
 }
 
@@ -91,15 +114,26 @@ interface ListItem {
   detail: string
 }
 
+interface PanelProps extends ListItem, listHandler {}
+
 function Panels(props: Props) {
   return (
-    <ol>
-      {(props.list as Array<ListItem>).map(item => <Panel key={item.title} title={item.title} detail={item.detail}></Panel>)}
-    </ol>
+    <Box>
+      {(props.list as Array<ListItem>).map(item =>
+        <Panel
+          key={item.title}
+          title={item.title}
+          detail={item.detail}
+          rmOne={props.rmOne}
+        />)}
+    </Box>
   )
 }
 
-function Panel(props: ListItem) {
+function Panel(props: PanelProps) {
+  function rmSelf() {
+    props.rmOne(props.title)
+  }
   return (
     <ExpansionPanel>
       <ExpansionPanelSummary>
@@ -107,6 +141,9 @@ function Panel(props: ListItem) {
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <p>{props.detail}</p>
+        <Button variant="outlined" color="primary" onClick={rmSelf}>
+          删除
+      </Button>
       </ExpansionPanelDetails>
     </ExpansionPanel>
   )
