@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   TextField,
   Button,
@@ -9,6 +9,7 @@ import {
   makeStyles,
   Theme,
 } from '@material-ui/core/styles';
+import { Add } from '@material-ui/icons'
 import LocaleDateTimePicker from './LocaleDateTimePicker'
 
 function PlanSetter({
@@ -24,11 +25,15 @@ function PlanSetter({
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
       button: {
-        margin: theme.spacing(1),
+        margin: theme.spacing(2),
+        width: '4rem',
+        height: '4rem',
+        alignSelf: 'center'
       },
-      input: {
-        display: 'none',
-      },
+      container: {
+        display: 'flex',
+        flexDirection: 'column',
+      }
     }),
   );
   const classes = useStyles()
@@ -47,7 +52,7 @@ function PlanSetter({
   }
 
   return (
-    <Container maxWidth='sm'>
+    <Container className={classes.container}>
       <TextField
         onChange={setTitle}
         label='主题'
@@ -63,14 +68,12 @@ function PlanSetter({
         margin="normal"
         variant="outlined"
       />
-      <Button
+      <LocaleDateTimePicker date={new Date(plan.date)} emitDate={setDate} />
+      <Add
         onClick={put}
-        variant="outlined"
         color="primary"
-        className={classes.button}>
-        添加一条
-      </Button>
-      <LocaleDateTimePicker emitDate={setDate} />
+        className={classes.button}
+      />
     </Container>
   );
 }

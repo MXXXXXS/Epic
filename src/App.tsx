@@ -3,8 +3,8 @@ import './App.css';
 import {
   Container,
 } from '@material-ui/core'
-import PlanSetter from './PlanSetter'
-import PlanManager from './PlanManager'
+import PlanSetter from './components/PlanSetter'
+import PlanManager from './components/PlanManager'
 
 
 function App() {
@@ -68,6 +68,7 @@ function App() {
         setPlan={setPlan}
         put={put} />
       <PlanManager
+        setPlan={setPlan}
         plans={list}
         remove={remove}
       />

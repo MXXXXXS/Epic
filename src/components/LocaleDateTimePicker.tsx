@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import 'date-fns';
 import zhCNLocale from "date-fns/locale/zh-CN";
 import DateFnsUtils from '@date-io/date-fns';
@@ -7,14 +7,14 @@ import {
   DateTimePicker,
 } from '@material-ui/pickers'
 
-function LocaleDateTimePicker({ emitDate }: { emitDate: ((_: Date) => void) }) {
-  // const [locale, setLocale] = useState('zh-CN');
-  const [selectedDate, setSelectedDate] = useState<Date | null>(
-    new Date(),
-  )
-
+function LocaleDateTimePicker({
+  emitDate,
+  date
+}: {
+  emitDate: (_: Date) => void,
+  date: Date
+}) {
   const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
     console.log(date)
     if (date)
       emitDate(date)
@@ -26,7 +26,7 @@ function LocaleDateTimePicker({ emitDate }: { emitDate: ((_: Date) => void) }) {
         autoOk
         ampm={false}
         disablePast
-        value={selectedDate}
+        value={date}
         onChange={handleDateChange}
         label="24h clock"
       />
