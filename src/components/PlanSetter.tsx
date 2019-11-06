@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   TextField,
-  Button,
   Container,
 } from '@material-ui/core'
 import {
@@ -11,6 +10,11 @@ import {
 } from '@material-ui/core/styles';
 import { Add } from '@material-ui/icons'
 import LocaleDateTimePicker from './LocaleDateTimePicker'
+// import Timers from '../utils/notify'
+
+// const timers = new Timers()
+
+const worker = new Worker('worker.js')
 
 function PlanSetter({
   plan,
@@ -70,7 +74,22 @@ function PlanSetter({
       />
       <LocaleDateTimePicker date={new Date(plan.date)} emitDate={setDate} />
       <Add
-        onClick={put}
+        onClick={() => {
+          if (plan.title !== '') {
+            put()
+            worker.postMessage({
+              date: new Date(plan.date),
+              title: plan.title,
+              body: plan.detail
+            })
+            // timers.add(new Date(plan.date), () => {
+            //   new Notification(plan.title, {
+            //     body: plan.detail
+            //   })
+            // })
+            console.log('put: ' + plan.title)
+          }
+        }}
         color="primary"
         className={classes.button}
       />

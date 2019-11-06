@@ -4,7 +4,7 @@ import {
   ExpansionPanelSummary,
   ExpansionPanelDetails,
 } from '@material-ui/core'
-import {DeleteForever, Edit} from '@material-ui/icons'
+import { DeleteForever, Edit } from '@material-ui/icons'
 import {
   createStyles,
   makeStyles,
@@ -20,8 +20,8 @@ function Plans({
   plans: ListItem[],
   remove: (title: string) => void
 }) {
-    //样式
-    const useStyles = makeStyles((theme: Theme) =>
+  //样式
+  const useStyles = makeStyles((theme: Theme) =>
     createStyles({
       button: {
         margin: theme.spacing(2),
@@ -46,15 +46,22 @@ function Plans({
               <p>{plan.date.toString()}</p>
               <DeleteForever className={classes.button}
                 color="secondary"
-                onClick={() => { remove(plan.title) }}
+                onClick={() => {
+                  setPlan({
+                    title: '',
+                    detail: '',
+                    date: new Date()
+                  })
+                  remove(plan.title)
+                }}
               />
               <Edit className={classes.button}
                 color="primary"
-                onClick={() => {setPlan({
+                onClick={() => setPlan({
                   title: plan.title,
                   detail: plan.detail,
                   date: new Date(plan.date)
-                })}}
+                })}
               />
             </ExpansionPanelDetails>
           </ExpansionPanel>
